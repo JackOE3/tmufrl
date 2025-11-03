@@ -92,22 +92,15 @@ This will:
 ### 2. Create the Gym Environment
 
 ```python
-import gymnasium as gym
+from tmufrl import GameInstanceManager
 
 # Specify the path to the map you want the agent to play
-env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/VeryCoolTrack" )
+env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/VeryCoolTrack")
 ```
 
 ### 3. Minimal Agent Loop
 
 ```python
-import gymnasium as gym
-from tmufrl import GameInstanceManager
-
-# Setup
-manager = GameInstanceManager(tmi_port=8477)
-env = gym.make("Trackmania-v0", manager=manager)
-
 # Reset environment
 obs, info = env.reset()
 
@@ -128,7 +121,7 @@ while not done:
         print(f"Episode finished! Total reward: {total_reward}")
 
 env.close()
-manager.close()  # Cleanly shut down the game instance
+manager.close_game()  # Cleanly shut down the game instance
 ```
 
 ### Bonus: Running Multiple Environments (Vectorized)
@@ -149,15 +142,10 @@ def make_gym_env_fn(manager):
     env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/SimpleMap#2")
     return env
 
-env_fns = [
-    partial(make_gym_env_fn, manager)
-    for manager in managers
-]
+env_fns = [partial(make_gym_env_fn, manager)for manager in managers]
 
-# Vectorized asynchronous environment
 envs = gym.vector.AsyncVectorEnv(env_fns)
 
-# Reset all
 obs, infos = envs.reset()
 
 # Step all environments
