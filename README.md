@@ -53,14 +53,12 @@ pip install .
 
 ## Required Environment Variables
 
-Before using the environment, set these two environment variables:
+Before you can use the environment, set these two environment variables.
 
-Set the path to your TMLoader executable
-
+Set the path to your TMLoader executable:
 `TMLOADER_PATH=C:/Path/To/TMLoader.exe`
 
-Set the profile name to use with TMLoader
-
+Set the profile name to use with TMLoader:
 `TMLOADER_PROFILE_NAME=MyTMProfile`
 
 ## Setup (TMInterface)
@@ -89,7 +87,7 @@ manager = GameInstanceManager(tmi_port=8477)
 This will:
 
 - Launch `TMLoader.exe` with the specified profile
-- Wait for TMInterface to connect on the given port
+- Wait for TMInterface to connect on the given port (for this you will need to activate the Python_Link plugin in-game)
 
 ### 2. Create the Gym Environment
 
