@@ -2,6 +2,8 @@
 
 A **Gymnasium** reinforcement learning environment for **Trackmania United Forever** (TMUF), powered by **TMInterface** and **TMLoader**. This package enables RL agents to interact with a running instance of Trackmania United Forever via socket communication.
 
+The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and works like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (DQN is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
+
 ---
 
 ## Features
@@ -9,7 +11,6 @@ A **Gymnasium** reinforcement learning environment for **Trackmania United Forev
 - Full **Gymnasium** compatibility (`gym.make("Trackmania-v0")`)
 - Real-time game state via **TMInterface**
 - Control multiple game instances using `GameInstanceManager`
-- Windows-only (due to `pywin32` and game requirements)
 
 ---
 
@@ -44,6 +45,7 @@ pip install .
 - Trackmania United Forever
 - [ModLoader](https://tomashu.dev/software/tmloader/)
 - [TMInterface](https://donadigo.com/tminterface/)
+- [TMI Plugin from Agade](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/Python_Link.as) (put this inside your `TMInterface\Plugins` folder)
 
 > Warning: Windows-only (due to `pywin32` and game dependencies)
 
@@ -54,10 +56,12 @@ pip install .
 Before using the environment, set these two environment variables:
 
 Set the path to your TMLoader executable
-TMLOADER_PATH=C:/Path/To/TMLoader.exe
+
+`TMLOADER_PATH=C:/Path/To/TMLoader.exe`
 
 Set the profile name to use with TMLoader
-TMLOADER_PROFILE_NAME=MyTMProfile
+
+`TMLOADER_PROFILE_NAME=MyTMProfile`
 
 ## Setup (TMInterface)
 
@@ -181,8 +185,6 @@ env = gym.make(
 ## Notes
 
 - Only tested on **Windows**
-- Ensure **TMInterface** is running in the game (usually starts with TMLoader)
+- Ensure **TMInterface** is running in the game
 - Multiple environments require different `tmi_port` values
 - Use `manager.close_game()` to properly terminate the game process
-
----
