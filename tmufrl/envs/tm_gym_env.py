@@ -2,7 +2,7 @@ import socket
 import time
 import cv2
 import numpy as np
-from tmufrl.utils.tminterface2 import CardinalDir, MessageType, TMInterface, SimStateData
+from tmufrl.utils.tminterface2 import MessageType, TMInterface, SimStateData
 from tmufrl.utils.game_instance_manager import GameInstanceManager
 from collections import deque
 from typing import Deque, Optional
@@ -107,8 +107,6 @@ class TrackmaniaEnv(gym.Env):
         self.current_frame = None
 
         self.UI_disabled = False
-        self._connect_and_sync()
-        #self._start_from_zero() # set initial state to t=0
 
     def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
         """
@@ -121,6 +119,9 @@ class TrackmaniaEnv(gym.Env):
             info (dict): Auxiliary information.
         """
         super().reset(seed=seed)
+
+        if not self.iface.registered:
+            self._connect_and_sync()
 
         if self._initial_state is None:
             self._start_from_zero()
@@ -205,21 +206,20 @@ class TrackmaniaEnv(gym.Env):
     def _connect_and_sync(self):
         """Connects to the TMInterface server and registers."""
         print(f"[{self.iface.port}] Connecting to TMInterface...")
-        if not self.iface.registered:
-            while True:
-                try:
-                    # Use the timeout defined for the environment
-                    self.iface.register(self.tmi_protection_timeout_s)
-                    print(f"[{self.iface.port}] Registered successfully.")
-                    # Wait for the initial sync message after registration
-                    self._wait_for_sync_after_connect()
-                    break
-                except ConnectionRefusedError as e:
-                    print(f"[{self.iface.port}] Connection refused: {e}. Retrying in 5 seconds...")
-                    time.sleep(5)
-                except socket.timeout:
-                    print(f"[{self.iface.port}] Registration attempt timed out. Retrying in 5 seconds...")
-                    time.sleep(5)
+        while True:
+            try:
+                # Use the timeout defined for the environment
+                self.iface.register(self.tmi_protection_timeout_s)
+                print(f"[{self.iface.port}] Registered successfully.")
+                # Wait for the initial sync message after registration
+                self._wait_for_sync_after_connect()
+                break
+            except ConnectionRefusedError as e:
+                print(f"[{self.iface.port}] Connection refused: {e}. Retrying in 5 seconds...")
+                time.sleep(5)
+            except socket.timeout:
+                print(f"[{self.iface.port}] Registration attempt timed out. Retrying in 5 seconds...")
+                time.sleep(5)
 
     def _wait_for_sync_after_connect(self):
         """Waits for the SC_ON_CONNECT_SYNC message after registering."""
