@@ -5,8 +5,6 @@ from typing import List
 import psutil
 import win32gui
 import win32process
-import win32com.client
-
 
 class GameInstanceManager:
     def __init__(self, tmi_port: int):
@@ -92,9 +90,3 @@ class GameInstanceManager:
                 if win32gui.GetWindowText(hwnd).startswith("Track"):
                     self.tm_window_id = hwnd
                     return
-
-    def set_foreground_window(self):
-        assert self.tm_window_id is not None, "Attempted to set Window to foreground, but did not have a window handle."
-        shell = win32com.client.Dispatch("WScript.Shell")
-        shell.SendKeys("%")
-        win32gui.SetForegroundWindow(self.tm_window_id)
