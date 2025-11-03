@@ -1,0 +1,46 @@
+# --- General Python Artifacts ---
+# Byte-compiled / optimized / dynamically generated files
+__pycache__/
+*.pyc
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Distribution / Build / Test artifacts
+dist/
+build/
+htmlcov/
+.tox/
+.pytest_cache/
+
+# --- Environment and Dependencies ---
+# Virtual Environments (Typically located outside the project, but good to include)
+venv/
+env/
+/envs/
+
+# Pip / Editable Install Artifacts
+*.whl
+.installed.cfg
+pip-log.txt
+
+# --- Operating System Files ---
+.DS_Store       # macOS
+Thumbs.db       # Windows
+
+# --- Editor and IDE Files ---
+# VS Code specific files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# --- Specific to Your Tree ---
+# Ignoring the top-level artifact folder
+/tmufrl.egg-info/
+
+# --- Ignore the inner __pycache__ in 'tmufrl' and 'tmufrl/utils'
+tmufrl/__pycache__/
+tmufrl/utils/__pycache__/

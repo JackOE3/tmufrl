@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tmufrl"
+version = "0.1.0"
+authors = [
+    { name = "Rollin Storm" },
+]
+description = "A RL Gymnasium environment for Trackmania Nations Forever using TMInterface."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" } # Assuming MIT license
+dependencies = [
+    "gymnasium>=0.29.0",
+    "numpy",
+    "opencv-python",
+    "tminterface",
+    "psutil",
+    "pywin32",
+]
+
+[project.urls]
+Repository = "https://github.com/JackOE3/tmufrl"
+
+
+[tool.setuptools.packages.find]
+# where = ["."] # Not necessary, but harmless if used. Assumes search starts here.
+include = ["tmufrl", "tmufrl.*"] # Explicitly include tmufrl and all its subpackages
+
+
+[project.entry-points."gymnasium.envs"]
+"Trackmania-v0" = "tmufrl"
