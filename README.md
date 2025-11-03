@@ -2,7 +2,7 @@
 
 A **Gymnasium** reinforcement learning environment for **Trackmania United Forever** (TMUF), powered by **TMInterface** and **TMLoader**. This package enables RL agents to interact with a running instance of Trackmania United Forever via socket communication.
 
-The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and works like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (DQN is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
+The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and works like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (Deep Q-Learning is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
 
 ---
 
@@ -127,7 +127,7 @@ manager.close_game()  # Cleanly shut down the game instance
 ### Bonus: Running Multiple Environments (Vectorized)
 
 Use `gymnasium.vector.AsyncVectorEnv` to run **multiple Trackmania instances in parallel**.
-This is optimal for on-policy algorithms like Proximal Policy Optimization (PPO) which make heavy use of vectorized environments. However, for off-policy algorithms (like DQN) this setup is suboptimal because the environment will be paused while the agent trains. For reference, the Linesight project uses a Learner-Worker architecture where the network is being trained while multiple agents are simultaneously driving around and collecting experience. It is an added complexity which breaks the vanilla RL loop laid out here by trying to squeeze out the maximum efficiency of parallel computing.
+This is optimal for on-policy algorithms like Proximal Policy Optimization (PPO) which make heavy use of vectorized environments. However, for off-policy algorithms (like Deep Q-Learning) this setup is suboptimal because the environment will be paused while the agent trains. For reference, the Linesight project uses a Learner-Worker architecture where the network is being trained while multiple agents are simultaneously driving around and collecting experience. It is an added complexity which breaks the vanilla RL loop laid out here by trying to squeeze out the maximum efficiency of parallel computing.
 
 ```python
 from functools import partial
