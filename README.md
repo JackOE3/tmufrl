@@ -144,7 +144,7 @@ def make_gym_env_fn(manager):
     env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/SimpleMap#2")
     return env
 
-env_fns = [partial(make_gym_env_fn, manager)for manager in managers]
+env_fns = [partial(make_gym_env_fn, manager) for manager in managers]
 
 envs = gym.vector.AsyncVectorEnv(env_fns)
 

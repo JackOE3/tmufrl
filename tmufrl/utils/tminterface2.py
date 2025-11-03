@@ -14,20 +14,6 @@ from tminterface.structs import CheckpointData, SimStateData
 
 HOST = "127.0.0.1"
 
-class CardinalDir(IntEnum):
-    North = 0
-    East = 1
-    South = 2
-    West = 3
-
-class Checkpoint:
-    def __init__(self, coord: np.ndarray, direction: CardinalDir):
-        self.coord = coord
-        self.direction = direction
-
-    def __repr__(self):
-        return f"Checkpoint(coord={self.coord}, direction={self.direction.name})"
-
 class MessageType(IntEnum):
     SC_RUN_STEP_SYNC = auto()
     SC_CHECKPOINT_COUNT_CHANGED_SYNC = auto()
@@ -176,31 +162,6 @@ class TMInterface:
                 raise ConnectionAbortedError("Socket connection closed by TMInterface while expecting int32.")
             data += chunk
         return struct.unpack("i", data)[0]
-
-    def get_checkpoints(self) -> list[Checkpoint]:
-        self.sock.sendall(struct.pack("i", MessageType.C_GET_CHECKPOINTS))
-        array_length = self._read_int32()
-        data = self.sock.recv(array_length, socket.MSG_WAITALL)
-
-        #print(f"Expected number of checkpoints: {array_length}")
-        #print(f"Total data length: {len(data)} bytes (expected {4 + array_length * 16} bytes)")
-
-        checkpoints = []
-        # Each checkpoint is 16 bytes: 12 for nat3 (x, y, z) + 4 for direction
-        for i in range(0, len(data), 16):
-            if i + 16 > array_length:
-                print(f"Warning: Incomplete data at position {i}, expected 16 bytes, got {array_length - i}")
-                break
-            # Unpack nat3 coordinates (12 bytes)
-            x = struct.unpack(">I", data[i:i+4])[0]
-            y = struct.unpack(">I", data[i+4:i+8])[0]
-            z = struct.unpack(">I", data[i+8:i+12])[0]
-            coord = np.array([x, y, z])
-            # Unpack direction (4 bytes)
-            dir_value = struct.unpack(">i", data[i+12:i+16])[0]  # ">i" for signed int
-            direction = CardinalDir(dir_value)
-            checkpoints.append(Checkpoint(coord, direction))
-        return checkpoints
 
     def focus_game_window(self):
         self.sock.sendall(struct.pack("i", MessageType.C_FOCUS_GAME_WINDOW))
