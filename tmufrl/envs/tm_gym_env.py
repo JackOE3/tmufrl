@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from tmufrl.utils.tminterface2 import CardinalDir, MessageType, TMInterface, SimStateData
 from tmufrl.utils.game_instance_manager import GameInstanceManager
-from tmufrl.utils.misc import distance_point_to_rectangle
 from collections import deque
 from typing import Deque, Optional
 import gymnasium as gym
