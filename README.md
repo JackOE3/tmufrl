@@ -131,6 +131,47 @@ env.close()
 manager.close()  # Cleanly shut down the game instance
 ```
 
+## Bonus: Running Multiple Environments (Vectorized)
+
+Use `gymnasium.vector.AsyncVectorEnv` to run **multiple Trackmania instances in parallel**.
+This is optimal for on-policy algorithms like Proximal Policy Optimization (PPO) which make heavy use of vectorized environments. However, for off-policy algorithms (like DQN) this setup is suboptimal because the environment will be paused while the agent trains. For reference, the Linesight project uses a Learner-Worker architecture where the network is being trained while multiple agents are simultaneously driving around and collecting experience. It is an added complexity which breaks the vanilla RL loop laid out here by trying to squeeze out the maximum efficiency of parallel computing.
+
+```python
+from functools import partial
+import gymnasium as gym
+from tmufrl import launch_tm_instances, clear_tm_instances, make_gym_env_fn
+
+# Launch 2 parallel game instances
+N_ENVS = 2
+managers = launch_tm_instances(N_ENVS)  # auto-assigns ports: 8477, 8478
+
+def make_gym_env_fn(manager):
+    env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/SimpleMap#2")
+    return env
+
+env_fns = [
+    partial(make_gym_env_fn, manager)
+    for manager in managers
+]
+
+# Vectorized asynchronous environment
+envs = gym.vector.AsyncVectorEnv(env_fns)
+
+# Reset all
+obs, infos = envs.reset()
+
+# Step all environments
+actions = envs.action_space.sample()  # shape: (N_ENVS,)
+obs, rewards, terms, truncs, infos = envs.step(actions)
+
+# Close all
+envs.close()
+clear_tm_instances()
+```
+
+> Each instance runs on a unique `tmi_port` (8477, 8478, ...).
+> Use `AsyncVectorEnv` for non-blocking execution.
+
 ---
 
 ## Observation & Action Space
