@@ -4,6 +4,8 @@ A **Gymnasium** reinforcement learning environment for **Trackmania United Forev
 
 The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and works like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (Deep Q-Learning is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
 
+This project is still very minimal. The reward function is extremely simple: +1 reward for crossing a checkpoint, +10 reward for finishing the race, and -0.1 reward per second as a time penalty. Should be made more sophisticated in the future. For example, Linesight uses a reference trajectory which is pre-generated to track progress on a map, which gives the agent a meaningful reward at every time step.
+
 ---
 
 ## Features
