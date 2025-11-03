@@ -215,3 +215,14 @@ env = gym.make(
 - Ensure **TMInterface** is running in the game
 - Multiple environments require different `tmi_port` values
 - Use `manager.close_game()` to properly terminate the game process
+
+---
+
+## Credits
+
+- **TMInterface Python client (`tminterface2.py`)**:
+  [tminterface2.py](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/tminterface2.py)
+  by [Linesight](https://github.com/Linesight-RL/linesight)
+- **TMI Plugin**:
+  [Python_Link](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/Python_Link.as)
+  by [Linesight](https://github.com/Linesight-RL/linesight)
