@@ -215,6 +215,7 @@ env = gym.make(
 - Ensure **TMInterface** is running in the game
 - Multiple environments require different `tmi_port` values
 - Use `manager.close_game()` to properly terminate the game process
+- There is a bug with multiple environments where an environment will not execute the actions send to it, unless the game window is focused at some specific time. I have not been able to fix this yet.
 
 ---
 
