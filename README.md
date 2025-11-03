@@ -47,7 +47,7 @@ pip install .
 - Trackmania United Forever
 - [ModLoader](https://tomashu.dev/software/tmloader/)
 - [TMInterface](https://donadigo.com/tminterface/)
-- [TMI Plugin from Agade](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/Python_Link.as) (put this inside your `TMInterface\Plugins` folder)
+- TMI Plugin: `Python_Link.as` (put this inside your `TMInterface\Plugins` folder)
 
 > Warning: Windows-only (due to `pywin32` and game dependencies)
 
@@ -217,7 +217,6 @@ env = gym.make(
 - Ensure **TMInterface** is running in the game
 - Multiple environments require different `tmi_port` values
 - Use `manager.close_game()` to properly terminate the game process
-- There is a bug with multiple environments where an environment will not execute the actions send to it, unless the game window is focused at some specific time. I have not been able to fix this yet.
 
 ---
 
@@ -227,5 +226,5 @@ env = gym.make(
   [tminterface2.py](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/tminterface2.py)
   by [Linesight](https://github.com/Linesight-RL/linesight)
 - **TMI Plugin**:
-  [Python_Link](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/Python_Link.as)
+  Original [Python_Link](https://github.com/Linesight-RL/linesight/blob/main/trackmania_rl/tmi_interaction/Python_Link.as)
   by [Linesight](https://github.com/Linesight-RL/linesight)
