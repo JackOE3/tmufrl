@@ -12,8 +12,7 @@ from enum import IntEnum, auto
 import numpy as np
 from tminterface.structs import CheckpointData, SimStateData
 
-#HOST = "127.0.0.1"
-HOST = "172.22.96.1" # windows HOST IP
+HOST = "127.0.0.1"
 
 class CardinalDir(IntEnum):
     North = 0
