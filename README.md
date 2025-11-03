@@ -139,7 +139,7 @@ This is optimal for on-policy algorithms like Proximal Policy Optimization (PPO)
 ```python
 from functools import partial
 import gymnasium as gym
-from tmufrl import launch_tm_instances, clear_tm_instances, make_gym_env_fn
+from tmufrl.utils.misc import clear_tm_instances, launch_tm_instances
 
 # Launch 2 parallel game instances
 N_ENVS = 2
