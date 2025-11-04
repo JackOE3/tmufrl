@@ -6,15 +6,11 @@ The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is 
 
 This project is still very minimal. The reward function is extremely simple: +1 reward for crossing a checkpoint, +10 reward for finishing the race, and -0.1 reward per second as a time penalty. Should be made more sophisticated in the future. For example, Linesight uses a reference trajectory which is pre-generated to track progress on a map, which gives the agent a meaningful reward at every time step.
 
----
-
 ## Features
 
 - Full **Gymnasium** compatibility
 - Real-time game state via **TMInterface**
 - Control multiple game instances using `GameInstanceManager`
-
----
 
 ## Installation
 
@@ -39,8 +35,6 @@ Alternatively, for a standard install:
 pip install .
 ```
 
----
-
 **Requirements**:
 
 - Python >= 3.8
@@ -50,8 +44,6 @@ pip install .
 - TMI Plugin: `Python_Link.as` (put this inside your `TMInterface\Plugins` folder)
 
 > Warning: Windows-only (due to `pywin32` and game dependencies)
-
----
 
 ## Required Environment Variables
 
@@ -73,8 +65,6 @@ set autologin 1
 
 > Replace `1` with your desired profile number.
 
----
-
 ## Usage
 
 ### 1. Start the Game Instance Manager
@@ -95,9 +85,13 @@ This will:
 
 ```python
 from tmufrl import GameInstanceManager
+from gymnasium.wrappers import GrayscaleObservation
 
 # Specify the path to the map you want the agent to play
 env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/VeryCoolTrack")
+
+# recommended to greyscale the images, just use this gym wrapper
+env = GrayscaleObservation(env)
 ```
 
 ### 3. Minimal Agent Loop
@@ -136,17 +130,17 @@ from functools import partial
 import gymnasium as gym
 from tmufrl.utils.misc import clear_tm_instances, launch_tm_instances
 
-def make_gym_env_fn(manager):
+def make_env(manager):
     env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/VeryCoolTrack")
     return env
 
-# important to protect entry here so the subprocesses wont execute this code
+# important to protect point entry here so the subprocesses wont execute this code
 if __name__ == '__main__':
     # Launch 2 parallel game instances
     N_ENVS = 2
     managers = launch_tm_instances(N_ENVS)  # auto-assigns ports: 8477, 8478
 
-    env_fns = [partial(make_gym_env_fn, manager) for manager in managers]
+    env_fns = [partial(make_env, manager) for manager in managers]
 
     envs = gym.vector.AsyncVectorEnv(env_fns)
 
@@ -164,18 +158,10 @@ if __name__ == '__main__':
 > Each instance runs on a unique `tmi_port` (8477, 8478, ...).
 > Use `AsyncVectorEnv` for non-blocking execution.
 
----
-
 ## Observation & Action Space
 
-### Observation Space
-
-- **Type**: `Box(0.0, 1.0, (120, 160), float32)`
-- **Default Shape**: `(120, 160)` — grayscale image (normalized to `[0, 1]`)
-
-### Action Space
-
-- **Type**: `Discrete(12)`
+- **Observation Space**: `Box(0, 255, (120, 160, 3), uint8)` (RGB image of size 120x160, the dimensions can be modified)
+- **Action Space**: `Discrete(12)`
 - **Actions**:
 
 | Index | Action          |
@@ -193,8 +179,6 @@ if __name__ == '__main__':
 | 10    | `DRIFT_RIGHT`   |
 | 11    | `FORWARD_BRAKE` |
 
----
-
 ### Customizable Environment Parameters
 
 ```python
@@ -211,16 +195,12 @@ env = gym.make(
 
 > Default parameters are shown here.
 
----
-
 ## Notes
 
 - Only tested on **Windows**
 - Ensure **TMInterface** is running in the game
 - Multiple environments require different `tmi_port` values
 - Use `manager.close_game()` to properly terminate the game process
-
----
 
 ## Credits
 

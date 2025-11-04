@@ -93,7 +93,7 @@ class TrackmaniaEnv(gym.Env):
 
         # Gym specific spaces
         self.action_space = spaces.Discrete(len(actions))
-        self.observation_space = spaces.Box(low=0.0, high=1.0, shape=(self.frame_height, self.frame_width), dtype=np.float32)
+        self.observation_space = spaces.Box(low=0, high=255, shape=(self.frame_height, self.frame_width, 3), dtype=np.uint8)
 
         self.current_state = None
         self._previous_state = None
@@ -458,20 +458,15 @@ class TrackmaniaEnv(gym.Env):
 
         return observation
 
-    def _get_observation_from_frame(self, frame: np.ndarray) -> np.ndarray:
-        """Greyscales a BGRA image and normalizes the values to the range 0...1"""
-        # Verify input is BGRA
-        assert frame.shape[-1] == 4, f"Expected BGRA image with 4 channels, got {frame.shape}"
+    def _get_observation_from_frame(self, frame_bgra: np.ndarray) -> np.ndarray:
+        # https://donadigo.com/tminterface/plugins/api/Graphics/CaptureScreenshot
+        # TMInterface will make a screenshot in the BGRA format
+        # shape: (H, W, 4)
+        assert frame_bgra.shape[-1] == 4, f"Expected BGRA image with 4 channels, got {frame_bgra.shape}"
 
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2GRAY)
-
-        # TMInterface gives the screenshot back in (height, width) shape
-        # and return shape (1, height, width) with 1 explicit channel for the conv net
-        #return np.expand_dims(gray_frame, axis=0)
-
-        normalized_frame = np.array(gray_frame) / 255.0 # shape: (H,W)
-
-        return normalized_frame.astype(np.float32)
+        # permute and get rid of alpha channel
+        frame_rgb = frame_bgra[:, :, [2, 1, 0]]
+        return frame_rgb.astype(np.uint8)
 
     def _calculate_reward(self, state: SimStateData):
         """Calculates the reward based on state changes."""
