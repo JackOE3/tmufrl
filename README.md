@@ -2,7 +2,7 @@
 
 A **Gymnasium** reinforcement learning environment for **Trackmania United Forever** (TMUF), powered by **TMInterface** and **TMLoader**. This package enables RL agents to interact with a running instance of Trackmania United Forever via socket communication.
 
-The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and works like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (Deep Q-Learning is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
+The [Linesight](https://github.com/Linesight-RL/linesight/tree/main) project is great and runs like butter if you want to train an agent out of the box with a cracked algorithm, but the code itself is pure spaghetti and almost unreadable unless you are 200h balls deep into it yourself. So if you want to try out a specific RL algorithm (Deep Q-Learning is a good start for Trackmania) yourself, you will be helplessly flailing around trying to adopt the code from that project. So, out of that need, this project is born, and as long as you undestand the Gym API, you will be able to do some delicious Reinforcement Learning. May your agent rise to sentience.
 
 This project is still very minimal. The reward function is extremely simple: +1 reward for crossing a checkpoint, +10 reward for finishing the race, and -0.1 reward per second as a time penalty. Should be made more sophisticated in the future. For example, Linesight uses a reference trajectory which is pre-generated to track progress on a map, which gives the agent a meaningful reward at every time step.
 
@@ -10,7 +10,7 @@ This project is still very minimal. The reward function is extremely simple: +1 
 
 ## Features
 
-- Full **Gymnasium** compatibility (`gym.make("Trackmania-v0")`)
+- Full **Gymnasium** compatibility
 - Real-time game state via **TMInterface**
 - Control multiple game instances using `GameInstanceManager`
 
@@ -136,27 +136,29 @@ from functools import partial
 import gymnasium as gym
 from tmufrl.utils.misc import clear_tm_instances, launch_tm_instances
 
-# Launch 2 parallel game instances
-N_ENVS = 2
-managers = launch_tm_instances(N_ENVS)  # auto-assigns ports: 8477, 8478
-
 def make_gym_env_fn(manager):
-    env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/SimpleMap#2")
+    env = gym.make("Trackmania-v0", manager=manager, map_path="My Challenges/VeryCoolTrack")
     return env
 
-env_fns = [partial(make_gym_env_fn, manager) for manager in managers]
+# important to protect entry here so the subprocesses wont execute this code
+if __name__ == '__main__':
+    # Launch 2 parallel game instances
+    N_ENVS = 2
+    managers = launch_tm_instances(N_ENVS)  # auto-assigns ports: 8477, 8478
 
-envs = gym.vector.AsyncVectorEnv(env_fns)
+    env_fns = [partial(make_gym_env_fn, manager) for manager in managers]
 
-obs, infos = envs.reset()
+    envs = gym.vector.AsyncVectorEnv(env_fns)
 
-# Step all environments
-actions = envs.action_space.sample()  # shape: (N_ENVS,)
-obs, rewards, terms, truncs, infos = envs.step(actions)
+    obs, infos = envs.reset()
 
-# Close all
-envs.close()
-clear_tm_instances()
+    # Step all environments
+    actions = envs.action_space.sample()  # shape: (N_ENVS,)
+    obs, rewards, terms, truncs, infos = envs.step(actions)
+
+    # Close all
+    envs.close()
+    clear_tm_instances()
 ```
 
 > Each instance runs on a unique `tmi_port` (8477, 8478, ...).
